@@ -1,0 +1,51 @@
+swagger: "2.0"
+info:
+  title: "Trading Notes API Gateway"
+  description: "Enterprise proxy for Flask Notes App"
+  version: "1.0.0"
+
+schemes:
+  - https
+
+x-google-backend:
+  address: https://trading-notes-api-b2nzxsyaxq-uc.a.run.app
+  path_translation: APPEND_PATH_TO_ADDRESS
+
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      summary: "Health check endpoint"
+      responses:
+        200:
+          description: "API healthy"
+
+  /notes:
+    get:
+      operationId: listNotes
+      summary: "Retrieve all notes from Firestore"
+      responses:
+        200:
+          description: "Notes retrieved successfully"
+
+    post:
+      operationId: createNote
+      summary: "Create new note in Firestore"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "note"
+          required: true
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+              version:
+                type: string
+      responses:
+        201:
+          description: "Note created successfully"

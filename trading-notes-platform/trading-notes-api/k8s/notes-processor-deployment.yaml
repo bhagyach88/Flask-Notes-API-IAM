@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notes-processor
+  labels:
+    app: notes-processor
+    version: v2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notes-processor
+  template:
+    metadata:
+      labels:
+        app: notes-processor
+    spec:
+      containers:
+      - name: notes-processor
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notes-processor-service
+spec:
+  selector:
+    app: notes-processor
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http

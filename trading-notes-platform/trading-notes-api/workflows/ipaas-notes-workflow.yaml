@@ -1,0 +1,22 @@
+main:
+  params: [input]
+  steps:
+  - createTradingNote:
+      call: http.post
+      args:
+        url: ${"https://" + sys.get_env("GATEWAY_URL") + "/notes"}
+        headers:
+          Content-Type: application/json
+        body:
+          message: ${input.message}
+          version: "v2"
+      result: noteResult
+
+  - logIntegration:
+      call: sys.log
+      args:
+        text: '${"iPaaS: Note created"}'
+        severity: INFO
+
+  - returnSuccess:
+      return: ${noteResult.body}
